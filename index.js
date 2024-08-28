@@ -1,7 +1,7 @@
 const express=require('express');
 const dbConnect = require('./config/db');
 const userAuthRoutes = require('./routes/userAuthRoutes');
-const { userLogin } = require('./controller/userAuthController');
+
 const app=express();
 
 //Middleware
@@ -17,7 +17,7 @@ dbConnect();
 //Mount user auth routes
 app.use('/api/user',userAuthRoutes);
 
-app.use('/api/user', userLogin);
+
 
 //default route
 app.get('/',(req,res)=>{

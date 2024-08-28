@@ -49,6 +49,8 @@ exports.signup=async(req,res)=>{
    }
 }
 
+
+//login 
 exports.userLogin=async(req, res)=>{
     try{
         const {email, password} = req.body;
@@ -64,7 +66,7 @@ exports.userLogin=async(req, res)=>{
         let user = await User.findOne({email});
         if(!user){
             res.status(400).json({
-                success: true,
+                success: false,
                 message: "Please SignUp first"
             })
         }
@@ -72,7 +74,7 @@ exports.userLogin=async(req, res)=>{
         // Create payload for JWT
         const payload ={
             email: user.email,
-            id : user.id,
+            id : user._id,
             role: user.role
         }
 
@@ -85,25 +87,25 @@ exports.userLogin=async(req, res)=>{
 
             user = user.toObject();
             user.password = undefined;
-
+            user.token=token;
             const options = {
                 expires : new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
                 httpOnly : true,
             }
 
-            // res.cookie("token",token,options).status(200).json({
-            //     success : true,
+            res.cookie("token",token,options).status(200).json({
+                success : true,
+                
+                user,
+                message:"User logged in successfully"
+            });
+
+            // res.status(200).json({
+            //     status: true,
             //     token,
             //     user,
-            //     message:"User logged in successfully"
+            //     message: "Login Successfully"
             // });
-
-            res.status(200).json({
-                status: true,
-                token,
-                user,
-                message: "Login Successfully"
-            });
 
 
         }
